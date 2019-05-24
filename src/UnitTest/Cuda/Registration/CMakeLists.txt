@@ -1,0 +1,5 @@
+# Registration
+UNIT_TEST_CUDA(TestCorrespondenceSetCuda ${CMAKE_PROJECT_NAME} ${OPEN3D_CUDA_MODULE}
+        ${GTEST_LIBRARIES} pthread)
+UNIT_TEST_CUDA(TestColoredICPCuda ${CMAKE_PROJECT_NAME} ${OPEN3D_CUDA_MODULE}
+        ${GTEST_LIBRARIES} pthread)

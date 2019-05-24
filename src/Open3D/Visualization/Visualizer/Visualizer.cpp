@@ -34,11 +34,11 @@ namespace {
 
 class GLFWEnvironmentSingleton {
 private:
+
     GLFWEnvironmentSingleton() { utility::PrintDebug("GLFW init.\n"); }
     GLFWEnvironmentSingleton(const GLFWEnvironmentSingleton &) = delete;
     GLFWEnvironmentSingleton &operator=(const GLFWEnvironmentSingleton &) =
             delete;
-
 public:
     ~GLFWEnvironmentSingleton() {
         glfwTerminate();
@@ -203,6 +203,11 @@ bool Visualizer::CreateVisualizerWindow(
 
 void Visualizer::DestroyVisualizerWindow() {
     is_initialized_ = false;
+    /** Unbind everything BEFORE context is destroyed.
+     * Otherwise CUDA OpenGL interpolation will crash **/
+    for (auto & renderer_ptr : geometry_renderer_ptrs_) {
+        renderer_ptr->UpdateGeometry();
+    }
     glDeleteVertexArrays(1, &vao_id_);
     glfwDestroyWindow(window_);
 }
@@ -237,7 +242,7 @@ void Visualizer::BuildUtilities() {
     coordinate_frame_mesh_ptr_ = geometry::CreateMeshCoordinateFrame(
             boundingbox.GetSize() * 0.2, boundingbox.min_bound_);
     coordinate_frame_mesh_renderer_ptr_ =
-            std::make_shared<glsl::CoordinateFrameRenderer>();
+        std::make_shared<glsl::CoordinateFrameRenderer>();
     if (coordinate_frame_mesh_renderer_ptr_->AddGeometry(
                 coordinate_frame_mesh_ptr_) == false) {
         return;
@@ -263,6 +268,11 @@ void Visualizer::Run() {
 }
 
 void Visualizer::Close() {
+    /** Unbind everything BEFORE context is destroyed.
+     * Otherwise CUDA OpenGL interpolation will crash **/
+    for (auto &renderer_ptr : geometry_renderer_ptrs_) {
+        renderer_ptr->UpdateGeometry();
+    }
     glfwSetWindowShouldClose(window_, GL_TRUE);
     utility::PrintDebug("[Visualizer] Window closing.\n");
 }
@@ -342,6 +352,7 @@ bool Visualizer::AddGeometry(
             return false;
         }
     } else {
+        geometry_renderer_ptrs_.insert(renderer_ptr);
         return false;
     }
     geometry_renderer_ptrs_.insert(renderer_ptr);

@@ -40,6 +40,10 @@ public:
         TriangleMesh = 5,
         HalfEdgeTriangleMesh = 6,
         Image = 7,
+
+        PointCloudCuda = 8,
+        TriangleMeshCuda = 9,
+        ImageCuda = 10
     };
 
 public:

@@ -1,0 +1,3 @@
+# Odometry
+UNIT_TEST_CUDA(TestReduction2DCuda ${CMAKE_PROJECT_NAME} ${OPEN3D_CUDA_MODULE}
+        ${GTEST_LIBRARIES} pthread)

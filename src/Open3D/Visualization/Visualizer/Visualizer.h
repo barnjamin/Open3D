@@ -197,7 +197,7 @@ protected:
     std::function<bool(Visualizer *)> animation_callback_func_ = nullptr;
     // Auxiliary internal backup of the callback function.
     // It copies animation_callback_func_ in each PollEvent() or WaitEvent()
-    // so that even if user calls RegisterAnimationCallback() within the
+    // so that even if user calls AnimationCallback() within the
     // callback function it is still safe.
     std::function<bool(Visualizer *)> animation_callback_func_in_loop_ =
             nullptr;

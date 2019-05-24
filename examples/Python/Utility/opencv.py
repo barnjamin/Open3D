@@ -5,6 +5,7 @@
 # examples/Python/Utility/opencv.py
 
 def initialize_opencv():
+    # return False
     opencv_installed = True
     try:
         import cv2
